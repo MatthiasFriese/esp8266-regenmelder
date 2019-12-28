@@ -85,10 +85,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
+  char value[length]; 
   for (unsigned int i = 0; i < length; i++) {
+    value[i] = (char)payload[i];
     Serial.print((char)payload[i]);
   }
   Serial.println();
+
+  if (strstr(topic, "rainCounter") != NULL) {
+    int newCounter = atoi(value);
+    if (raincounter != newCounter) {
+      Serial.print("Update rainCounter with ");
+      Serial.println(newCounter);
+      raincounter = newCounter;
+    } else {
+      Serial.println("Ignore update of rainCounter");
+    }
+  }
 }
 
 void reconnect() {
